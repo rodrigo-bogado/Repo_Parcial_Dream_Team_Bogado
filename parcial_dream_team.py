@@ -10,7 +10,7 @@ import csv
 
 ########## FUNCIONES UTILITARIAS ##############
 
-def leer_archivo():
+def leer_archivo() -> list:
     '''
     Usa el comando open() para abrir el archivo 'dt.json'
     en modo lectura y copia el contenido en un diccionario
@@ -25,14 +25,14 @@ def leer_archivo():
 
     return lista_jugadores
 
-def solicitar_y_normalizar_seleccion():
+def solicitar_y_normalizar_seleccion() -> int:
     '''
     Solicita selección del menú.
     Guarda en la variable 'opcion'.
     Verifica que sea una opción válida con regex.
     En caso de serlo, normaliza la opción a integer.
     En caso contrario, se guarda "-1" en la variable.
-    Retorna la variable 'opcion_normalizada'.
+    Retorna la variable 'opcion_normalizada' (int).
     '''
 
     opcion = input("\nIngrese opción: ")
@@ -44,7 +44,7 @@ def solicitar_y_normalizar_seleccion():
 
     return opcion_normalizada
 
-def opcion_ingresada_incorrecta():
+def opcion_ingresada_incorrecta() -> bool:
     '''
     Solicita al usuario un caracter alfanumérico y retorna 'False' si 
     el caracter es 'x' o 'X' y retorna 'True' en caso contrario.
@@ -58,11 +58,11 @@ def opcion_ingresada_incorrecta():
     else:
         return True
 
-def normalizar_texto(texto):
+def normalizar_texto(texto:str) -> str:
     '''
     Recibe un string 'texto' y reemplaza todos los guiones bajos "_"
     por espacios " " y capitaliza la primera letra del string.
-    Retorna el string 'key_formateado_capitalizado'
+    Retorna el string 'key_formateado_capitalizado' (str)
     '''
 
     key_formateado = re.sub("_"," ",texto)
@@ -71,7 +71,7 @@ def normalizar_texto(texto):
 
     return key_formateado_capitalizado
 
-def guardar_archivo(nombre_archivo_guardar, contenido_a_copiar):
+def guardar_archivo(nombre_archivo_guardar:str, contenido_a_copiar:str) -> bool:
     '''
     Guarda el contenido en un archivo CSV.
 
@@ -98,8 +98,6 @@ def guardar_archivo(nombre_archivo_guardar, contenido_a_copiar):
 
         lista_separada_lineas.append(linea_separada)
 
-    print(lista_separada_lineas)
-
     with open(nombre_archivo_guardar, "w+",newline="") as archivo:
         archivo_temporal = csv.writer(archivo)
         archivo_temporal.writerows(lista_separada_lineas)
@@ -111,7 +109,7 @@ def guardar_archivo(nombre_archivo_guardar, contenido_a_copiar):
         print("\nError al crear el archivo {0}".format(nombre_archivo_guardar))
         return False
 
-def buscar_nombres_similares(nombre_ingresado, lista_jugadores): 
+def buscar_nombres_similares(nombre_ingresado:str, lista_jugadores:list) -> dict: 
     '''
     Recibe un string llamado nombre_ingresado y la lista_jugadores (list)
     Crea una lista_coincidencias (dict) y una variable vacía llamada
@@ -120,8 +118,8 @@ def buscar_nombres_similares(nombre_ingresado, lista_jugadores):
     los valores de "nombre" que tengan similitudes con el valor de
     'nombre_ingresado' y los guarda junto a su respectivo número de índice
     en la 'lista_coincidencias' (key: Indice, Value: Nombre).
-    Retorna 'lista_coincidencias' y 'indice_jugador_encontrado'.
-    Si no encuentra coincidencias retorna la lista y variables vacías.
+    Retorna nombre/s en 'diccionario_jugador_encontrado' (dict).
+    Si no encuentra coincidencias retorna diccionario vacío.
     '''
 
     lista_coincidencias = {}
@@ -188,13 +186,13 @@ def buscar_nombres_similares(nombre_ingresado, lista_jugadores):
 
             return diccionario_jugador_encontrado # Retorna diccionario vacío
 
-def ordenar_por_estadisticas(lista_original:list,key:str,estadistica:str,asc_desc:bool):
+def ordenar_por_estadisticas(lista_original:list,key:str,estadistica:str,asc_desc:bool) -> list:
     '''
     Esta función recibe una lista, un atributo (altura, peso, etc)
     y un booleano que representa ascendente (True) y descendente (False)
     Utiliza el algoritmo 'quicksort' para iterar el atributo especificado
     en la lista y ordernarlo según el valor de de asc_desc.
-    Retorna la lista ordenada.
+    Retorna la lista ordenada en 'lista_ordenada' (list).
     '''
 
     lista_derecha = []
@@ -252,7 +250,7 @@ def ordenar_por_estadisticas(lista_original:list,key:str,estadistica:str,asc_des
 
     return lista_ordenada
 
-def calcular_promedio_estadisticas(lista_jugadores,estadistica):
+def calcular_promedio_estadisticas(lista_jugadores:list,estadistica:str) -> float:
     '''
     Calcula el promedio de una estadística específica de la lista_jugadores.
 
@@ -261,7 +259,7 @@ def calcular_promedio_estadisticas(lista_jugadores,estadistica):
         estadistica (str): La estadística para la cual se desea calcular el promedio.
 
     Returns:
-        float: El promedio de la estadística para los jugadores 
+        float: El promedio de la estadística para los jugadores en 'promedio'.
     '''
 
     suma_total = 0
@@ -275,7 +273,7 @@ def calcular_promedio_estadisticas(lista_jugadores,estadistica):
 
     return promedio
 
-def estadisticas_mayores_a_n(lista_jugadores,key,estadistica,asc_desc):
+def estadisticas_mayores_a_n(lista_jugadores:list,key:str,estadistica:str,asc_desc:bool) -> list:
     '''
     Devuelve una lista de jugadores cuya estadística específicada es mayor o igual a un valor de referencia.
 
@@ -286,7 +284,7 @@ def estadisticas_mayores_a_n(lista_jugadores,key,estadistica,asc_desc):
         asc_desc (str): El orden ascendente o descendente para ordenar la lista de jugadores.
 
     Returns:
-        list: Una lista de jugadores cuya estadística es mayor o igual al valor de referencia.
+        list: Una 'lista_estadisticas' de jugadores cuya estadística es mayor o igual al valor de referencia.
     '''
 
     os.system("cls")
@@ -295,11 +293,24 @@ def estadisticas_mayores_a_n(lista_jugadores,key,estadistica,asc_desc):
 
     lista_estadisticas = []
 
+    flag = True
+
     for jugador in lista_jugadores:
 
         lista_original.append(jugador)
 
-    estadistica_referencia = int(input("Ingrese valor de referencia: "))
+    while True:
+
+        estadistica_referencia = input("\nIngrese valor de referencia: ")
+
+        if estadistica_referencia == "" or estadistica_referencia.isalpha():
+            if opcion_ingresada_incorrecta():
+                continue
+            else:
+                app_dream_team(lista_jugadores)
+        else:
+            estadistica_referencia = float(estadistica_referencia)
+            break
 
     lista_ordenada = ordenar_por_estadisticas(lista_original,key,estadistica,asc_desc)
 
@@ -320,7 +331,7 @@ def estadisticas_mayores_a_n(lista_jugadores,key,estadistica,asc_desc):
 
     return lista_estadisticas
 
-def mostrar_estadisticas_asc_desc(lista_jugadores:list,key:str,estadistica:str,asc_desc): 
+def mostrar_estadisticas_asc_desc(lista_jugadores:list,key:str,estadistica:str,asc_desc:bool): 
     '''
     Muestra las estadísticas de los jugadores en orden ascendente o descendente.
 
@@ -354,7 +365,7 @@ def mostrar_estadisticas_asc_desc(lista_jugadores:list,key:str,estadistica:str,a
 
         print("{0}: {1}".format(nombre_jugador,estadistica_a_mostrar))
 
-def buscar_min_max_estadistica(lista_jugadores:list,estadistica:str,min_max):
+def buscar_min_max_estadistica(lista_jugadores:list,estadistica:str,min_max) -> list:
     '''
     Busca el valor mínimo o máximo de una estadística específica en la lista de jugadores.
 
@@ -364,7 +375,8 @@ def buscar_min_max_estadistica(lista_jugadores:list,estadistica:str,min_max):
         min_max (str): El tipo de búsqueda, puede ser "menor" o "mayor".
 
     Returns:
-        list: Una lista que contiene el valor mínimo o máximo de la estadística y los nombres de los jugadores correspondientes.
+        list: Una'lista_valor_nombres_min_max'que contiene el valor mínimo o máximo 
+        de la estadística y los nombres de los jugadores correspondientes.
     '''
 
     valor_min_max = None
@@ -372,47 +384,51 @@ def buscar_min_max_estadistica(lista_jugadores:list,estadistica:str,min_max):
     flag_primera_vuelta = True
 
             
-    for jugador in lista_jugadores:
+    for jugador in lista_jugadores: # Guarda como referencia la estadistica y el nombre en cada iteracion
 
-        estadistica_jugador = float(jugador["estadisticas"][estadistica])
+        estadistica_jugador = float(jugador["estadisticas"][estadistica]) 
 
         nombre_jugador = jugador["nombre"]
 
-        if min_max == "menor":
+        if min_max == "menor": # Busca el valor mas bajo
 
-            if flag_primera_vuelta == True or estadistica_jugador < float(valor_min_max):
-
+            if flag_primera_vuelta == True or estadistica_jugador < float(valor_min_max): # Verifica si es primera vuelta o compara si es menor
+                                                                                          # al valor mas bajo encontrado hasta ahora
                 valor_min_max = estadistica_jugador
 
                 nombre_mayor = nombre_jugador
 
-                flag_primera_vuelta = False
+                flag_primera_vuelta = False # Siempre guarda el primer valor en la primera vuelta
 
-        elif min_max == "mayor":
+        elif min_max == "mayor": # Busca el valor mas alto
 
-                if flag_primera_vuelta == True or estadistica_jugador > float(valor_min_max):
-
+                if flag_primera_vuelta == True or estadistica_jugador > float(valor_min_max):# Verifica si es primera vuelta o compara si es mayor
+                                                                                             # al valor mas alto encontrado hasta ahora
                     valor_min_max = estadistica_jugador
 
                     nombre_mayor = nombre_jugador
 
-                    flag_primera_vuelta = False
+                    flag_primera_vuelta = False # Siempre guarda el primer valor en la primera vuelta
 
-    lista_valor_nombres_min_max.append(valor_min_max)
+    if valor_min_max.is_integer(): # Si es entero lo convierte de float a int
 
-    lista_valor_nombres_min_max.append(nombre_mayor)
+        valor_min_max = int(valor_min_max)
 
-    for jugador in lista_jugadores:
+    lista_valor_nombres_min_max.append(valor_min_max) # Primero guarda el valor en la lista
+
+    lista_valor_nombres_min_max.append(nombre_mayor) # Luego agrega el nombre en la lista
+
+    for jugador in lista_jugadores: # Verifica que no haya más jugadores con el mismo valor para agregar a la lista
 
         estadistica_jugador = float(jugador["estadisticas"][estadistica])
 
         nombre_jugador = jugador["nombre"]
 
-        if estadistica_jugador == valor_min_max and nombre_mayor != jugador["nombre"]:
+        if estadistica_jugador == valor_min_max and nombre_mayor != jugador["nombre"]: # Verifica que no se agregue el mismo nombre
 
-            lista_valor_nombres_min_max.append(nombre_jugador)
+            lista_valor_nombres_min_max.append(nombre_jugador) # Se agrega a la lista si tiene el mismo valor
 
-    return lista_valor_nombres_min_max
+    return lista_valor_nombres_min_max 
 
 ########## FUNCIONES PRINCIPALES ##############
 
@@ -424,7 +440,7 @@ def listar_jugadores_por_nombre_y_posicion(lista_jugadores:list): # 1
         lista_jugadores (list): Lista de jugadores, donde cada jugador es un diccionario.
 
     Returns:
-        Muestra la lista directamente
+        Muestra la lista de nombres y posiciones directamente
     '''
 
     os.system("cls")
@@ -491,14 +507,13 @@ def mostrar_estadisticas_jugador_por_indice(lista_jugadores:list): # 2
     
 def guardar_archivo_por_indice(lista_jugadores:list): # 3
     '''
-    Después de mostrar las estadísticas de un jugador seleccionado por el usuario, 
-    permite al usuario guardar las estadísticas de ese jugador en un archivo CSV. 
+    Busca el índice del último jugador visto en el punto 2 y guarda su información en un CSV. 
+    Si no se eligió un índice previamente se notifica al usuario y se vuelve al menú.
     El archivo CSV contiene los siguientes campos: nombre, posición, temporadas, 
     puntos totales, promedio de puntos por partido, rebotes totales, promedio de 
     rebotes por partido, asistencias totales, promedio de asistencias por partido, 
     robos totales, bloqueos totales, porcentaje de tiros de campo, porcentaje de 
     tiros libres y porcentaje de tiros triples.
-    Si no se eligió un índice previamente se notifica al usuario y se vuelve al menú.
     Notifica si se guardó el archivo correctamente.
     '''
 
@@ -547,7 +562,7 @@ def guardar_archivo_por_indice(lista_jugadores:list): # 3
             else:
                 app_dream_team(lista_jugadores)
 
-def buscar_logros_de_jugador_por_nombre(lista_jugadores): # 4
+def buscar_logros_de_jugador_por_nombre(lista_jugadores:list): # 4
     '''
     Busca y muestra los logros de un jugador por su nombre.
 
@@ -583,7 +598,7 @@ def buscar_logros_de_jugador_por_nombre(lista_jugadores): # 4
     else:
         buscar_logros_de_jugador_por_nombre(lista_jugadores)
 
-def mostrar_promedio_total_estadistica(lista_jugadores:list,key:str,estadistica:str,asc_desc=True): # 5
+def mostrar_promedio_total_estadistica(lista_jugadores:list,key:str,estadistica:str,asc_desc): # 5
     '''
     Muestra las estadísticas de los jugadores ordenados y el promedio total de una estadística específica.
 
@@ -630,27 +645,27 @@ def buscar_miembro_salon_de_la_fama(lista_jugadores:list): # 6
 
     nombre_ingresado = input("\nIngrese nombre a buscar: ")
 
-    if nombre_ingresado == "":
+    if nombre_ingresado == "" or nombre_ingresado.isnumeric(): # Verifica que se ingrese un nombre correcto
         if opcion_ingresada_incorrecta():
             buscar_logros_de_jugador_por_nombre(lista_jugadores)
         else:
             app_dream_team(lista_jugadores)
 
-    diccionario_jugador_encontrado = buscar_nombres_similares(nombre_ingresado, lista_jugadores) 
+    diccionario_jugador_encontrado = buscar_nombres_similares(nombre_ingresado, lista_jugadores) # Busca los nombres similares
 
-    if len(diccionario_jugador_encontrado) > 0:
+    if len(diccionario_jugador_encontrado) > 0: # Verifica que la lista de coincidencias no esté vacía
 
         nombre_jugador = diccionario_jugador_encontrado["nombre"]
 
-        for logros in diccionario_jugador_encontrado["logros"]:
+        for logros in diccionario_jugador_encontrado["logros"]: # Busca en el diccionario de jugador si el patrón de búsqueda existe
 
-            if logros == patron_busqueda:
+            if logros == patron_busqueda:  
 
-                print("El jugador {0} es miembro del Salon de la Fama del Baloncesto".format(nombre_jugador))
+                print("El jugador {0} es miembro del Salon de la Fama del Baloncesto".format(nombre_jugador)) # Si existe lo notifica
 
-                flag_miembro_encontrado = True
+                flag_miembro_encontrado = True # Flag que verifica si hubo coincidencia con el patrón de busqueda
 
-        if flag_miembro_encontrado == False:
+        if flag_miembro_encontrado == False: # Si no hubo coincidencia se notifica al usuario
 
             print("El jugador {0} NO es miembro del Salon de la Fama del Baloncesto".format(nombre_jugador))
 
@@ -673,45 +688,45 @@ def jugador_con_mayor_menor_estadistica(lista_jugadores:list,estadistica:str,min
 
     os.system("cls")
         
-    lista_valor_nombres_min_max = buscar_min_max_estadistica(lista_jugadores,estadistica,min_max)
+    lista_valor_nombres_min_max = buscar_min_max_estadistica(lista_jugadores,estadistica,min_max) # Busca valor min_max y nombre/s
 
     nombres_min_max = ""
 
-    for i in range(0,len(lista_valor_nombres_min_max),1):
+    for i in range(0,len(lista_valor_nombres_min_max),1): # Itera todo el largo de la lista, sea cual sea
 
-        if i == 0:
+        if i == 0: # El primer valor siempre se guarda en 'valor_min_max'
 
             valor_min_max = lista_valor_nombres_min_max[i]
 
-        elif i == 1:
+        elif i == 1: # El segundo valor de la lista es el nombre min_max, se concatena en 'nombres_min_max' (str)
 
             nombres_min_max += str(lista_valor_nombres_min_max[i])
 
-        elif i == len(lista_valor_nombres_min_max) - 1:
+        elif i == len(lista_valor_nombres_min_max) - 1: # En casi de haber dos o más nombres se separan los dos últimos con "y"
 
             nombres_min_max += " y " + str(lista_valor_nombres_min_max[i])
 
-        elif i > 1:
+        elif i > 1: # En caso de haber tres o más nombres se separan los primeros con ","
 
             nombres_min_max += ", " + str(lista_valor_nombres_min_max[i])
 
-    atributo_formateado = re.sub("_"," ",estadistica)
+    estadistica_formateada = re.sub("_"," ",estadistica) # se reemplazan los guiones de 'estadística' por por espacios 
 
-    if re.search(r"promedio",estadistica):
+    if re.search(r"promedio",estadistica): # Se formatea el texto según el tipo de estadística para que tenga sentido gramaticalmente
             
-        atributo_formateado = re.sub("promedio","promedio de",atributo_formateado)
+        estadistica_formateada = re.sub("promedio","promedio de",estadistica_formateada)
 
         final_texto = "."
 
     elif re.search(r"porcentaje",estadistica):
 
-        atributo_formateado = re.sub("porcentaje","porcentaje de",atributo_formateado)
+        estadistica_formateada = re.sub("porcentaje","porcentaje de",estadistica_formateada)
 
         final_texto = "%"
 
     else:
 
-        atributo_formateado = "cantidad de {0}".format(atributo_formateado)
+        estadistica_formateada = "cantidad de {0}".format(estadistica_formateada)
 
         final_texto = "."
 
@@ -727,9 +742,11 @@ def jugador_con_mayor_menor_estadistica(lista_jugadores:list,estadistica:str,min
 
         es_son = "es"
 
-    print("\n{0} con {1} {2} {3} {4} con {5}{6}".format(comienzo_texto,min_max,atributo_formateado,es_son,nombres_min_max,valor_min_max,final_texto))
+    # Finalmente se concatenan todas las variables formateadas en el mensaje final
 
-def buscar_jugadores_estadisticas_mayores_a_n(lista_jugadores:list,key:str,estadistica:str,asc_desc=True): # 10 # 11 # 12 # 15 # 18
+    print("\n{0} con {1} {2} {3} {4} con {5}{6}".format(comienzo_texto,min_max,estadistica_formateada,es_son,nombres_min_max,valor_min_max,final_texto))
+
+def buscar_jugadores_estadisticas_mayores_a_n(lista_jugadores:list,key:str,estadistica:str,asc_desc): # 10 # 11 # 12 # 15 # 18
     '''
     Busca jugadores cuya estadística especificada es mayor a un valor dado.
 
@@ -741,7 +758,6 @@ def buscar_jugadores_estadisticas_mayores_a_n(lista_jugadores:list,key:str,estad
 
     Returns:
         Muestra directamente la lista de jugadores con valor mayor al especificado.
-
     '''
 
     lista_promedios = estadisticas_mayores_a_n(lista_jugadores,key,estadistica,asc_desc)
@@ -769,12 +785,9 @@ def promedio_total_estadistica_excluyendo_valor_menor(lista_jugadores:list,estad
 
     Returns:
         Muestra directamente el promedio total del equipo excluyendo al jugador con menor valor.
-
     '''
 
     lista_valor_nombres_min_max = buscar_min_max_estadistica(lista_jugadores,estadistica,min_max)
-
-    print(lista_valor_nombres_min_max)
 
     lista_jugadores_sin_menor = []
 
@@ -828,7 +841,7 @@ def jugador_con_mas_logros(lista_jugadores:list): # 17
 
     print("\nEl jugador con mas logros es {0} con {1} logros en total.".format(nombre_jugador_mas_logros,cantidad_logros_mayor))
 
-def ordenar_jugadores_estadisticas_mayores_a_n_por_posicion(lista_jugadores:list,key:str,estadistica:str,asc_desc=True): # 20
+def ordenar_jugadores_estadisticas_mayores_a_n_por_posicion(lista_jugadores:list,key:str,estadistica:str,asc_desc): # 20
     '''
     Ordena y muestra los jugadores con estadísticas mayores a un valor específico, organizados por posición.
 
@@ -872,6 +885,84 @@ def ordenar_jugadores_estadisticas_mayores_a_n_por_posicion(lista_jugadores:list
 
                     print("{0} - {1}".format(posicion,jugador_estadistica))
 
+def guardar_ranking_jugadores(lista_jugadores:list):
+    '''
+    Guarda el ranking de jugadores en un archivo CSV y muestra el ranking en pantalla.
+
+    Parámetros:
+        - lista_jugadores (list): Lista de jugadores con su información.
+
+    '''
+
+    os.system("cls")
+
+    lista_original = lista_jugadores
+
+    lista_ordenada_puntos = ordenar_por_estadisticas(lista_original,key="estadisticas",estadistica="puntos_totales",asc_desc=False)
+    lista_ordenada_rebotes = ordenar_por_estadisticas(lista_original,key="estadisticas",estadistica="rebotes_totales",asc_desc=False)
+    lista_ordenada_asistencias = ordenar_por_estadisticas(lista_original,key="estadisticas",estadistica="asistencias_totales",asc_desc=False)
+    lista_ordenada_robos = ordenar_por_estadisticas(lista_original,key="estadisticas",estadistica="robos_totales",asc_desc=False)
+
+    lista_nombres_rank = []
+
+    lista_nombres_rank_mostrar = []
+
+    lista_nombres_rank.append("Jugador:Puntos:Rebotes:Asistencias:Robos")
+
+    lista_nombres_rank_mostrar.append("\nJugador            Puntos Rebotes Asistencias Robos")
+
+    for jugador in lista_jugadores:
+
+        nombre_jugador = jugador["nombre"]
+
+        for indice,nombre in enumerate(lista_ordenada_puntos):
+
+            if nombre_jugador == nombre["nombre"]:
+
+                rank_puntos = indice + 1
+
+        for indice,nombre in enumerate(lista_ordenada_rebotes):
+
+            if nombre_jugador == nombre["nombre"]:
+
+                rank_rebotes = indice + 1
+                
+        for indice,nombre in enumerate(lista_ordenada_asistencias):
+
+            if nombre_jugador == nombre["nombre"]:
+
+                rank_asistencias = indice + 1
+
+        for indice,nombre in enumerate(lista_ordenada_robos):
+
+            if nombre_jugador == nombre["nombre"]:
+
+                rank_robos = indice + 1
+
+        lista_nombres_rank.append("{0}:{1}:{2}:{3}:{4}".format(nombre_jugador,rank_puntos,rank_rebotes,rank_asistencias,rank_robos))
+
+        nombre_jugador_just = nombre_jugador.ljust(18," ")
+
+        rank_puntos_just = str(rank_puntos).ljust(5," ")
+
+        rank_rebotes_just = str(rank_rebotes).ljust(5," ")
+
+        rank_asistencias_just = str(rank_asistencias).ljust(5," ")
+
+        rank_robos_just = str(rank_robos).ljust(5," ")
+
+        lista_nombres_rank_mostrar.append("{0}    {1} {2} {3} {4}".format(nombre_jugador_just,rank_puntos_just,rank_rebotes_just,rank_asistencias_just,rank_robos_just))
+
+    contenido_a_copiar = ",".join(lista_nombres_rank)
+
+    nombre_archivo_guardar = "ranking_dream_team.csv"
+
+    for fila in lista_nombres_rank_mostrar:
+
+        print(fila)
+
+    guardar_archivo(nombre_archivo_guardar,contenido_a_copiar)
+
 def mostrar_menu():
     '''
     Limpia la consola y muestra el menú de selección.
@@ -899,11 +990,12 @@ def mostrar_menu():
             "18. Buscar jugadores con porcentaje de tiros triples mayor a X.\n"
             "19. Mostrar el jugador con la mayor cantidad de temporadas jugadas\n"
             "20. Buscar jugadores con porcentaje de tiros de campo mayor a X ordenados por posición.\n"
+            "23. Bonus: Mostrar ranking de jugadores por estadisticas en y guardar en archivo csv.\n"
             "0. Salir \n")
     
     return menu
 
-def app_dream_team(lista_jugadores):
+def app_dream_team(lista_jugadores:list):
     '''
     Función principal del programa.
     Inicia un bucle con salida opcional ("0" en menú principal).
@@ -1046,6 +1138,12 @@ def app_dream_team(lista_jugadores):
 
                 input("\nPresione ENTER para continuar...")
                 continue
+            case 23:
+
+                guardar_ranking_jugadores(lista_jugadores)
+
+                input("\nPresione ENTER para continuar...")
+                continue                
             case -1:
 
                 input("\nOpción ingresada no es válida, presione ENTER para volver a intentar.")
