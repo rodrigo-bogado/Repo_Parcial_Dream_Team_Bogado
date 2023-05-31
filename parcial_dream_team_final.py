@@ -963,6 +963,129 @@ def guardar_ranking_jugadores(lista_jugadores:list):
 
     guardar_archivo(nombre_archivo_guardar,contenido_a_copiar)
 
+def cantidad_de_jugadores_por_posicion(lista_jugadores:list):
+    '''
+    Determinar la cantidad de jugadores que hay por cada posición.
+    Ejemplo:
+    Base: 2
+    Alero: 3
+    '''
+
+    os.system("cls")
+
+    set_posiciones = set()
+
+    contador_posiciones = {}
+
+    for jugador in lista_jugadores: # Se arma el set de posiciones
+
+        posicion_jugador = jugador["posicion"]
+
+        set_posiciones.add(posicion_jugador)
+    
+    for posicion in set_posiciones: # Se inicializa el diccionario con los datos del set y valores en 0
+
+        contador_posiciones[posicion] = 0
+
+    for jugador in lista_jugadores: # Se itera la lista de jugadores
+
+        posicion_jugador = jugador["posicion"]
+        
+        contador_posiciones[posicion_jugador] += 1 # Se suma 1 a la posición que coincide con la del jugador
+
+    print("\nPosición | Cantida de jugadores\n")
+
+    for posicion,cantidad in contador_posiciones.items():
+
+        print("{0}: {1}".format(posicion, cantidad))
+
+def ordenar_jugadores_por_all_star(lista_jugadores:list):
+    '''
+    2. Mostrar la lista de jugadores ordenadas por la cantidad de All-Star de forma descendente. 
+    La salida por pantalla debe tener un formato similar a este:
+
+    Michael Jordan (14 veces All Star)
+    Magic Johnson (12 veces All-Star)
+    '''
+
+    os.system("cls")
+
+    lista_jugadores_all_stars = []
+
+    for jugador in lista_jugadores:
+
+        diccionario_all_stars = {}
+
+        nombre_jugador = jugador["nombre"]
+
+        for logro in jugador["logros"]:
+
+            if "All-Star" in logro:
+
+                cantidad_all_star = re.findall(r"\d+",logro) # guarda un diccionario con el valor numerico encontrado
+
+                diccionario_all_stars["nombre"] = nombre_jugador
+
+                diccionario_all_stars["cantidad_all_stars"] = int(cantidad_all_star[0]) # guarda el valor numerico como string
+
+                lista_jugadores_all_stars.append(diccionario_all_stars)
+
+    lista_original = lista_jugadores_all_stars
+
+    lista_ordenada = ordenar_por_estadisticas(lista_original,key="cantidad_all_stars",estadistica="",asc_desc=False)
+
+    print("\nNombre | Cantidad de All-Stars\n")
+
+    for jugador in lista_ordenada:
+
+        print("{0}: {1}".format(jugador["nombre"],jugador["cantidad_all_stars"]))
+
+def mostrar_mayores_estadisticas_con_nombre(lista_jugadores:list):
+    '''
+    3. Determinar qué jugador tiene las mejores estadísticas en cada valor. 
+    La salida por pantalla debe tener un formato similar a este:
+
+    Mayor cantidad de temporadas: Karl Malone (19)
+    Mayor cantidad de puntos totales: Karl Malon (36928)
+    '''
+
+    lista_estadisticas = lista_jugadores[0]["estadisticas"]
+
+    for estadistica,valor in lista_estadisticas.items():
+
+        estadistica_formateada = re.sub("_"," ",estadistica)
+
+        lista_valor_nombre_max = buscar_min_max_estadistica(lista_jugadores,estadistica,min_max="mayor")
+
+        valor_max = lista_valor_nombre_max[0]
+
+        nombres_max = lista_valor_nombre_max[1:]
+
+        nombres_max_formateado = ""
+
+        for i in range(0,len(nombres_max)):
+
+            if i == 0:
+
+                nombres_max_formateado += nombres_max[i]
+            
+            elif i > 0:
+
+                nombres_max_formateado += ", " + str(nombres_max[i])
+
+        if "promedio" in estadistica:
+
+            comienzo_mensaje = "Mayor promedio de {0}".format(estadistica_formateada[9:])
+
+        elif "porcentaje" in estadistica:
+
+            comienzo_mensaje = "Mayor porcentaje de {0}".format(estadistica_formateada[11:])
+        else:
+
+            comienzo_mensaje = "Mayor cantidad de {0}".format(estadistica_formateada)
+
+        print("{0}: {1} ({2})".format(comienzo_mensaje,nombres_max_formateado,valor_max))
+
 def mostrar_menu():
     '''
     Limpia la consola y muestra el menú de selección.
@@ -991,6 +1114,8 @@ def mostrar_menu():
             "19. Mostrar el jugador con la mayor cantidad de temporadas jugadas\n"
             "20. Buscar jugadores con porcentaje de tiros de campo mayor a X ordenados por posición.\n"
             "23. Bonus: Mostrar ranking de jugadores por estadisticas en y guardar en archivo csv.\n"
+            "24. Bonus: Mostrar cantidad de jugadores en cada posición\n"
+            "25. Bonus: Ordenar jugadores por número de 'All-Star' de forma descendente\n"
             "0. Salir \n")
     
     return menu
@@ -1144,6 +1269,24 @@ def app_dream_team(lista_jugadores:list):
 
                 input("\nPresione ENTER para continuar...")
                 continue                
+            case 24:
+
+                cantidad_de_jugadores_por_posicion(lista_jugadores)
+
+                input("\nPresione ENTER para continuar...")
+                continue                
+            case 25:
+
+                ordenar_jugadores_por_all_star(lista_jugadores)
+
+                input("\nPresione ENTER para continuar...")
+                continue       
+            case 26:
+
+                mostrar_mayores_estadisticas_con_nombre(lista_jugadores)
+
+                input("\nPresione ENTER para continuar...")
+                continue
             case -1:
 
                 input("\nOpción ingresada no es válida, presione ENTER para volver a intentar.")
