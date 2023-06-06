@@ -17,8 +17,10 @@ def leer_archivo() -> list:
     llamado 'diccionario_dream_team'. Luego Copia el contenido
     del key 'jugadores' en una lista llamada lista_jugadores
     '''
+
+    ruta_archivo = r"C:\Users\Rod\Documents\Programación_entregas\Repo_Parcial_Dream_Team_Bogado\dt.json"
     
-    with open("dt.json", "r",encoding="utf-8") as dream_team_temp:
+    with open(ruta_archivo, "r",encoding="utf-8") as dream_team_temp:
         diccionario_dream_team = json.load(dream_team_temp)
 
     lista_jugadores = diccionario_dream_team["jugadores"]
@@ -885,7 +887,7 @@ def ordenar_jugadores_estadisticas_mayores_a_n_por_posicion(lista_jugadores:list
 
                     print("{0} - {1}".format(posicion,jugador_estadistica))
 
-def guardar_ranking_jugadores(lista_jugadores:list):
+def guardar_ranking_jugadores(lista_jugadores:list): # 23 Extra 0
     '''
     Guarda el ranking de jugadores en un archivo CSV y muestra el ranking en pantalla.
 
@@ -963,12 +965,15 @@ def guardar_ranking_jugadores(lista_jugadores:list):
 
     guardar_archivo(nombre_archivo_guardar,contenido_a_copiar)
 
-def cantidad_de_jugadores_por_posicion(lista_jugadores:list):
+def cantidad_de_jugadores_por_posicion(lista_jugadores:list): # 24 Extra 1
     '''
-    Determinar la cantidad de jugadores que hay por cada posición.
-    Ejemplo:
-    Base: 2
-    Alero: 3
+    Recibe una lista de jugadores y muestra la cantidad de jugadores que hay por cada posición.
+
+    Parámetros:
+    - lista_jugadores (list): Lista de jugadores con sus respectivas posiciones.
+
+    Return:
+    - Muestra posiciones y cantidad de jugadores directamente.
     '''
 
     os.system("cls")
@@ -999,13 +1004,15 @@ def cantidad_de_jugadores_por_posicion(lista_jugadores:list):
 
         print("{0}: {1}".format(posicion, cantidad))
 
-def ordenar_jugadores_por_all_star(lista_jugadores:list):
+def ordenar_jugadores_por_all_star(lista_jugadores:list): # 25 Extra 2
     '''
-    2. Mostrar la lista de jugadores ordenadas por la cantidad de All-Star de forma descendente. 
-    La salida por pantalla debe tener un formato similar a este:
+    Recibe lista de jugadores, ordena y muestra los jugadores según la cantidad de All-Stars que han obtenido.
 
-    Michael Jordan (14 veces All Star)
-    Magic Johnson (12 veces All-Star)
+    Parámetros:
+    - lista_jugadores (list): Lista de jugadores con sus respectivos logros.
+
+    Return:
+    - Muestra lista de jugadores y la cantidad de All-Stars de forma descendente.
     '''
 
     os.system("cls")
@@ -1040,18 +1047,32 @@ def ordenar_jugadores_por_all_star(lista_jugadores:list):
 
         print("{0}: {1}".format(jugador["nombre"],jugador["cantidad_all_stars"]))
 
-def mostrar_mayores_estadisticas_con_nombre(lista_jugadores:list):
+def mostrar_mayores_estadisticas_con_nombre(lista_jugadores:list): # 26 Extra 3
     '''
     3. Determinar qué jugador tiene las mejores estadísticas en cada valor. 
     La salida por pantalla debe tener un formato similar a este:
 
     Mayor cantidad de temporadas: Karl Malone (19)
     Mayor cantidad de puntos totales: Karl Malon (36928)
+
+    Recibe lista de jugadores y muestra las mayores estadísticas junto 
+    con los nombres de los jugadores correspondientes.
+
+    Parámetros:
+    - lista_jugadores (list): Lista de jugadores con sus respectivas estadísticas.
+
+    Return: 
+    - Muestra lista de estadisticas junto al nombre del jugador sin ningun orden en particular.
+
     '''
+
+    os.system("cls")
 
     lista_estadisticas = lista_jugadores[0]["estadisticas"]
 
-    for estadistica,valor in lista_estadisticas.items():
+    print("\nJugadores con mejores valores por estadística: \n")
+
+    for estadistica,_ in lista_estadisticas.items():
 
         estadistica_formateada = re.sub("_"," ",estadistica)
 
@@ -1086,6 +1107,90 @@ def mostrar_mayores_estadisticas_con_nombre(lista_jugadores:list):
 
         print("{0}: {1} ({2})".format(comienzo_mensaje,nombres_max_formateado,valor_max))
 
+def ordenar_jugadores_por_ranking_estadisticas(lista_jugadores:list):
+    '''
+    Ordena la lista de jugadores por ranking de estadísticas.
+
+    Parámetros:
+    - lista_jugadores (list): Lista de jugadores con sus respectivas estadísticas.
+
+    Retorna:
+    - lista_ordenada (list): Lista de jugadores ordenados por ranking de estadísticas.
+    '''
+    
+    lista_original = lista_jugadores
+
+    lista_ordenada = []
+
+    for estadistica in lista_original[0]["estadisticas"]:
+
+        lista_ordenada = ordenar_por_estadisticas(lista_original,key="estadisticas",estadistica=estadistica,asc_desc=False)
+
+        for indice,jugador in enumerate(lista_ordenada):
+
+            jugador["estadisticas"][estadistica] = indice + 1
+
+    return lista_ordenada
+   
+def mostrar_jugador_con_mejores_estadisticas(lista_jugadores:list): # 27 Extra 4
+    '''
+    Recibe lista de jugadores y usa la función 'ordenar_jugadores_por_ranking_estadisticas()' 
+    para buscar al jugador que lidera el ranking y muestra su nombre.
+    Luego muestra ranking de estadísticas totales.
+    '''
+
+    os.system("cls")
+
+    lista_ordenada = []
+
+    lista_ranking_total = []
+
+    lista_ordenada = ordenar_jugadores_por_ranking_estadisticas(lista_jugadores)
+
+    for jugador in lista_ordenada:
+
+        suma_estadisticas = 0
+
+        diccionario_ranking = {}
+
+        for _,valor in jugador["estadisticas"].items():
+
+            valor_estadistica = int(valor)
+
+            suma_estadisticas += valor_estadistica
+
+        diccionario_ranking = {"Nombre":jugador["nombre"],"Rank":suma_estadisticas}
+
+        lista_ranking_total.append(diccionario_ranking)
+
+        diccionario_ranking.clear
+
+    lista_ranking_total_ordenada = ordenar_por_estadisticas(lista_original=lista_ranking_total,key="Rank",estadistica="",asc_desc=True)
+
+    flag_primera_vuelta = True
+
+    rank_mayor = None
+    
+    for jugador in lista_ranking_total:
+
+        nombre = jugador["Nombre"]
+
+        rank = int(jugador["Rank"])
+
+        if flag_primera_vuelta == True or rank < rank_mayor:
+
+            rank_mayor = rank
+
+            nombre_top_rank = nombre
+
+            flag_primera_vuelta = False
+
+    print("\nEl jugador con mejores estadísticas es {0} liderando el ranking de estadísticas totales:\n".format(nombre_top_rank))
+
+    for indice,jugador in enumerate(lista_ranking_total_ordenada):
+
+        print("{0} - {1}".format(indice+1, jugador["Nombre"]))
+    
 def mostrar_menu():
     '''
     Limpia la consola y muestra el menú de selección.
@@ -1116,6 +1221,8 @@ def mostrar_menu():
             "23. Bonus: Mostrar ranking de jugadores por estadisticas en y guardar en archivo csv.\n"
             "24. Bonus: Mostrar cantidad de jugadores en cada posición\n"
             "25. Bonus: Ordenar jugadores por número de 'All-Star' de forma descendente\n"
+            "26. Bonus: Mostrar jugador con mayor valor por estadística \n"
+            "27. Bonus: Mostrar jugador con las mejores estadísticas de todos\n"
             "0. Salir \n")
     
     return menu
@@ -1287,6 +1394,12 @@ def app_dream_team(lista_jugadores:list):
 
                 input("\nPresione ENTER para continuar...")
                 continue
+            case 27:
+
+                mostrar_jugador_con_mejores_estadisticas(lista_jugadores)
+
+                input("\nPresione ENTER para continuar...")
+                continue                
             case -1:
 
                 input("\nOpción ingresada no es válida, presione ENTER para volver a intentar.")
